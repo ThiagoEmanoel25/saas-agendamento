@@ -39,3 +39,16 @@ class DoctorAvailavility(TenantAwareModel):
     end_time: Mapped[Time] = mapped_column(Time, nullable=False)
 
     slot_duration: Mapped[int] = mapped_column(Integer, default=30)  # duração do slot em minutos
+
+class Appointment(TenantAwareModel): # herança de TenantAwareModel
+    __tablename__ = 'appointment'
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    patient_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
+    Doctor_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
+
+    start_datetime: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    end_datetime: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+
+    notes: Mapped[str] = mapped_column(Text,nullable=True)
+    status: Mapped[str] = mapped_column(String(20), default='scheduled')  # e.g., 'scheduled', 'completed', 'canceled'
