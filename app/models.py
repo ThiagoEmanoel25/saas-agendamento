@@ -14,41 +14,41 @@ class TenantAwareModel(db.Model):
 class Tenant(db.Model): # modelo para representar os tenants
     __tablename__ = 'tenant'
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(100), nullable=False)
-    subdomain: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    name: Mapped[str] = mapped_column(String(length=100), nullable=False)
+    subdomain: Mapped[str] = mapped_column(String(length=50), unique=True, nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean(), default=True)
 
 class User(TenantAwareModel):
     __tablename__ = 'user'
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(100), nullable=False)
-    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
-    password_hash: Mapped[str] = mapped_column(String(128), nullable=False)
+    name: Mapped[str] = mapped_column(String(length=100), nullable=False)
+    email: Mapped[str] = mapped_column(String(length=120), unique=True, nullable=False)
+    password_hash: Mapped[str] = mapped_column(String(length=255), nullable=False)
 
-    role: Mapped[str] = mapped_column(String(20), default='patient')  # e.g., 'admin', 'customer'
+    role: Mapped[str] = mapped_column(String(length=20), default='patient')  # e.g., 'admin', 'customer'
 
 
-class DoctorAvailavility(TenantAwareModel):
+class DoctorAvailability(TenantAwareModel):
     __tablename__ = 'doctor_availability'
     id: Mapped[int] = mapped_column(primary_key=True)
 
     doctor_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
 
-    day_of_week: Mapped[int] = mapped_column(Integer, nullable=False)  # 0=Monday, 6=Sunday
-    start_time: Mapped[Time] = mapped_column(Time, nullable=False)
-    end_time: Mapped[Time] = mapped_column(Time, nullable=False)
+    day_of_week: Mapped[int] = mapped_column(Integer(), nullable=False)  # 0=Monday, 6=Sunday
+    start_time: Mapped[Time] = mapped_column(Time(), nullable=False)
+    end_time: Mapped[Time] = mapped_column(Time(), nullable=False)
 
-    slot_duration: Mapped[int] = mapped_column(Integer, default=30)  # duração do slot em minutos
+    slot_duration: Mapped[int] = mapped_column(Integer(), default=30)  # duração do slot em minutos
 
 class Appointment(TenantAwareModel): # herança de TenantAwareModel
     __tablename__ = 'appointment'
     id: Mapped[int] = mapped_column(primary_key=True)
 
     patient_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
-    Doctor_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
+    doctor_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
 
-    start_datetime: Mapped[datetime] = mapped_column(DateTime, nullable=False)
-    end_datetime: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    start_datetime: Mapped[datetime] = mapped_column(DateTime(), nullable=False)
+    end_datetime: Mapped[datetime] = mapped_column(DateTime(), nullable=False)
 
-    notes: Mapped[str] = mapped_column(Text,nullable=True)
-    status: Mapped[str] = mapped_column(String(20), default='scheduled')  # e.g., 'scheduled', 'completed', 'canceled'
+    notes: Mapped[str] = mapped_column(Text(), nullable=True)
+    status: Mapped[str] = mapped_column(String(length=20), default='scheduled')  # e.g., 'scheduled', 'completed', 'canceled'
