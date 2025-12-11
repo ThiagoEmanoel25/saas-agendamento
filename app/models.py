@@ -1,4 +1,4 @@
-from app import db
+from app.extensions import db
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import ForeignKey, String, Integer, Boolean, DateTime, Time, Text
 from datetime import datetime
@@ -50,5 +50,5 @@ class Appointment(TenantAwareModel): # herança de TenantAwareModel
     start_datetime: Mapped[datetime] = mapped_column(DateTime(), nullable=False)
     end_datetime: Mapped[datetime] = mapped_column(DateTime(), nullable=False)
 
-    notes: Mapped[str] = mapped_column(Text(), nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text(), nullable=True)
     status: Mapped[str] = mapped_column(String(length=20), default='scheduled')  # e.g., 'scheduled', 'completed', 'canceled'
