@@ -1,7 +1,7 @@
 # app/__init__.py
 from flask import Flask
 from config import Config
-from app.extensions import db, Migrate
+from app.extensions import db, Migrate, jwt
 
 def create_app():
     app = Flask(__name__)
@@ -9,6 +9,8 @@ def create_app():
 
     db.init_app(app)
     Migrate.init_app(app, db)
+
+    jwt.init_app(app)
 
     # Importa models
     from app import models

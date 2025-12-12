@@ -19,6 +19,9 @@ class Config:
     if uri.startswith("postgres://"):
         uri = uri.replace("postgres://", "postgresql://", 1)
 
+    with open('jwt_key.text', 'r') as file:
+        jwt_key = file.read().strip()
+
     SQLALCHEMY_DATABASE_URI = uri
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv("SECRET_KEY", "chave-padrao-insegura")
