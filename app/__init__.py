@@ -1,14 +1,14 @@
 # app/__init__.py
 from flask import Flask
 from config import Config
-from app.extensions import db, Migrate, jwt
+from app.extensions import db, migrate, jwt
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
     db.init_app(app)
-    Migrate.init_app(app, db)
+    migrate.init_app(app, db)
 
     jwt.init_app(app)
 
@@ -24,5 +24,8 @@ def create_app():
 
     from app.api.appointments import appointment_bp
     app.register_blueprint(appointment_bp)
+
+    from app.api.auth import auth_bp
+    app.register_blueprint(auth_bp)
 
     return app
