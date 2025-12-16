@@ -15,13 +15,11 @@ class Config:
         raise RuntimeError("ERRO CRÍTICO: A variável 'DATABASE_URL' não foi encontrada. "
                            "Verifique se o arquivo .env existe na raiz do projeto e se a variável está escrita corretamente.")
 
-
     if uri.startswith("postgres://"):
         uri = uri.replace("postgres://", "postgresql://", 1)
-
-    with open('jwt_key.text', 'r') as file:
-        jwt_key = file.read().strip()
 
     SQLALCHEMY_DATABASE_URI = uri
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv("SECRET_KEY", "chave-padrao-insegura")
+
+    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY") or 'chave-jwt-padrao-insegura'
