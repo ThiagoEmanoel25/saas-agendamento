@@ -2,6 +2,8 @@ from app.extensions import db
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import ForeignKey, String, Integer, Boolean, DateTime, Time, Text
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 
 class TenantAwareModel(db.Model):
@@ -9,6 +11,7 @@ class TenantAwareModel(db.Model):
 
     # Todos que herdarem disso terão essa coluna automaticamente
     tenant_id: Mapped[int] = mapped_column(ForeignKey('tenant.id'), nullable=False)
+    password_hash: Mapped[str] = mapped_column(String(length=255), nullable=False)
 
 
 class Tenant(db.Model): # modelo para representar os tenants
@@ -52,3 +55,7 @@ class Appointment(TenantAwareModel): # herança de TenantAwareModel
 
     notes: Mapped[str | None] = mapped_column(Text(), nullable=True)
     status: Mapped[str] = mapped_column(String(length=20), default='scheduled')  # e.g., 'scheduled', 'completed', 'canceled'
+
+def check_password(self, password: str) -> bool:
+    """Retorna True se a senha estiver correta, False se estiver incorreta"""
+    return check_password_hash(self.password_hash, password)
