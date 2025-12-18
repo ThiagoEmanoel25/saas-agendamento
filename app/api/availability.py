@@ -4,7 +4,7 @@ from app.models import DoctorAvailability
 from app.schema import availabilitySchema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-availability_bp = Blueprint('availability', __name__, url_prefix='/api/availability')
+availability_bp = Blueprint('availability', __name__, url_prefix='/availability')
 
 @availability_bp.route('/', methods=['POST'])
 @jwt_required()
