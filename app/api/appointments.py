@@ -6,10 +6,12 @@ from datetime import datetime
 from typing import Any, Dict
 from marshmallow import Schema, fields, ValidationError
 from sqlalchemy import func
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # configuração de logging
 logger = logging.getLogger(__name__)
 appointment_bp = Blueprint('appointments',__name__, url_prefix='/appointments')
+
 
 # schema para validação de dados de agendamento
 class AppointmentSchema(Schema):
@@ -24,7 +26,11 @@ class AppointmentSchema(Schema):
         strict = True
 
 @appointment_bp.route('/', methods=['POST'])
+@jwt_required()
 def create_appointment() -> tuple:
+    current_user_id = get_jwt_identity()
+    print(f"Usuário logado tentando agendar: {current_user_id}")
+
     try:
 
         data = request.get_json() or {}
@@ -92,6 +98,7 @@ def create_appointment() -> tuple:
         return jsonify({'error': 'Erro interno do servidor'}), 500
 
 @appointment_bp.route('/', methods=['GET'])
+@jwt_required()
 def list_appointments() -> tuple:
     try:
 # obter parâmetros da requisição
