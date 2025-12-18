@@ -11,7 +11,6 @@ class TenantAwareModel(db.Model):
 
     # Todos que herdarem disso terão essa coluna automaticamente
     tenant_id: Mapped[int] = mapped_column(ForeignKey('tenant.id'), nullable=False)
-    password_hash: Mapped[str] = mapped_column(String(length=255), nullable=False)
 
 
 class Tenant(db.Model): # modelo para representar os tenants
@@ -28,6 +27,10 @@ class User(TenantAwareModel):
     email: Mapped[str] = mapped_column(String(length=120), unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String(length=255), nullable=False)
 
+    def check_password(self, password: str) -> bool:
+        """Retorna True se a senha estiver correta, False se estiver incorreta"""
+        return check_password_hash(self.password_hash, password)
+
     role: Mapped[str] = mapped_column(String(length=20), default='patient')  # e.g., 'admin', 'customer'
 
 
@@ -43,6 +46,14 @@ class DoctorAvailability(TenantAwareModel):
 
     slot_duration: Mapped[int] = mapped_column(Integer(), default=30)  # duração do slot em minutos
 
+    def __init__(self, doctor_id: int, tenant_id: int, day_of_week: int, start_time, end_time, slot_duration: int = 30):
+        self.doctor_id = doctor_id
+        self.tenant_id = tenant_id
+        self.day_of_week = day_of_week
+        self.start_time = start_time
+        self.end_time = end_time
+        self.slot_duration = slot_duration
+
 class Appointment(TenantAwareModel): # herança de TenantAwareModel
     __tablename__ = 'appointment'
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -56,6 +67,3 @@ class Appointment(TenantAwareModel): # herança de TenantAwareModel
     notes: Mapped[str | None] = mapped_column(Text(), nullable=True)
     status: Mapped[str] = mapped_column(String(length=20), default='scheduled')  # e.g., 'scheduled', 'completed', 'canceled'
 
-def check_password(self, password: str) -> bool:
-    """Retorna True se a senha estiver correta, False se estiver incorreta"""
-    return check_password_hash(self.password_hash, password)
