@@ -1,6 +1,6 @@
 from marshmallow import schema, fields, validate
 
-class availibilitySchema(schema.Schema):
+class availabilitySchema(schema.Schema):
     #id e doctor_id são 'dump_only' para porque o usuário não envia isso
 
     id = fields.Int(dump_only=True)
