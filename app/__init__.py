@@ -28,4 +28,7 @@ def create_app():
     from app.api.auth import auth_bp
     app.register_blueprint(auth_bp)
 
+    from app.api.availability import availability_bp
+    app.register_blueprint(availability_bp)
+
     return app
