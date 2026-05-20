@@ -83,5 +83,16 @@ requirements.txt
 
 - [ ] Implementar testes FastAPI usando `fastapi.testclient` e `pytest`
 - [ ] Configurar Alembic para migrações se necessário
-- [ ] Scaffolder frontend com Nuxt 3 (Vue 3)
+- [x] Scaffolder frontend com Nuxt 3 (Vue 3)
 
+## Frontend
+
+O frontend Nuxt 3 fica em `frontend/`.
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Ele usa `http://localhost:8000` como API por padrao. Para alterar, defina `NUXT_PUBLIC_API_BASE`.
